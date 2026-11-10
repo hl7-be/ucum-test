@@ -1,0 +1,76 @@
+meta {
+  name: {spoon} is not in BeVolumeUnitsVS
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{txBase}}/ValueSet/$validate-code
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/fhir+json
+  Accept: application/fhir+json
+}
+
+body:json {
+  {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "valueSet",
+        "resource": {
+          "resourceType": "ValueSet",
+          "status": "draft",
+          "name": "BeVolumeUnitsVS",
+          "id": "BeVolumeUnitsVS",
+          "title": "Volume units (UCUM canonical = m3)",
+          "description": "All UCUM units whose canonical unit is m3. A bare annotation has no canonical unit and is outside the value set, but an annotation on a volume unit (`mL{spoon}`) has the same canonical unit as mL and is inside.",
+          "url": "https://www.ehealth.fgov.be/standards/fhir/ucum-test/ValueSet/BeVolumeUnitsVS",
+          "experimental": true,
+          "compose": {
+            "include": [
+              {
+                "system": "http://unitsofmeasure.org",
+                "filter": [
+                  {
+                    "property": "canonical",
+                    "op": "=",
+                    "value": "m3"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "system",
+        "valueUri": "http://unitsofmeasure.org"
+      },
+      {
+        "name": "code",
+        "valueCode": "{spoon}"
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  const p = (res.body.parameter || []);
+  const result = p.find(x => x.name === 'result');
+  const message = p.find(x => x.name === 'message');
+  test("result is false", function() {
+    expect(result && result.valueBoolean, message && message.valueString).to.equal(false);
+  });
+}
+
+docs {
+  `{spoon}` against `BeVolumeUnitsVS`.
+}

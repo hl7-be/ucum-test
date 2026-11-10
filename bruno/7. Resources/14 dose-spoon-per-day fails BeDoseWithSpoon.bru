@@ -1,0 +1,79 @@
+meta {
+  name: dose-spoon-per-day fails BeDoseWithSpoon
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{txBase}}/ValueSet/$validate-code
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/fhir+json
+  Accept: application/fhir+json
+}
+
+body:json {
+  {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "valueSet",
+        "resource": {
+          "resourceType": "ValueSet",
+          "status": "draft",
+          "name": "BeDoseUnitsWithSpoonVS",
+          "id": "BeDoseUnitsWithSpoonVS",
+          "title": "Dose units - enumerated, with {spoon}",
+          "description": "A closed list that allows `{spoon}` but not `{lepel}`. Annotations are matched as written: the server compares the code text, not its meaning.",
+          "url": "https://www.ehealth.fgov.be/standards/fhir/ucum-test/ValueSet/BeDoseUnitsWithSpoonVS",
+          "experimental": true,
+          "compose": {
+            "include": [
+              {
+                "system": "http://unitsofmeasure.org",
+                "concept": [
+                  {
+                    "code": "mL",
+                    "display": "milliliter"
+                  },
+                  {
+                    "code": "{spoon}",
+                    "display": "spoon"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "coding",
+        "valueCoding": {
+          "system": "http://unitsofmeasure.org",
+          "code": "{spoon}/d",
+          "display": "spoon per day"
+        }
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  const p = (res.body.parameter || []);
+  const result = p.find(x => x.name === 'result');
+  const message = p.find(x => x.name === 'message');
+  test("result is false", function() {
+    expect(result && result.valueBoolean, message && message.valueString).to.equal(false);
+  });
+}
+
+docs {
+  MedicationRequest/dose-spoon-per-day doses 1 `{spoon}/d`. Profile `BeDoseWithSpoon` binds the dose to `BeDoseUnitsWithSpoonVS`.
+}

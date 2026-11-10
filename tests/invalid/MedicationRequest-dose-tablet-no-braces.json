@@ -1,0 +1,27 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "dose-tablet-no-braces",
+  "status": "active",
+  "intent": "order",
+  "medicationCodeableConcept": {
+    "text": "Paracetamol syrup 24 mg/mL"
+  },
+  "subject": {
+    "display": "Test patient"
+  },
+  "dosageInstruction": [
+    {
+      "text": "1 tablet (unit written without braces)",
+      "doseAndRate": [
+        {
+          "doseQuantity": {
+            "value": 1,
+            "code": "tablet",
+            "system": "http://unitsofmeasure.org",
+            "unit": "tablet"
+          }
+        }
+      ]
+    }
+  ]
+}

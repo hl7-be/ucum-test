@@ -1,0 +1,87 @@
+meta {
+  name: dose-lepel fails BeDoseNoSpoon
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{txBase}}/ValueSet/$validate-code
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/fhir+json
+  Accept: application/fhir+json
+}
+
+body:json {
+  {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "valueSet",
+        "resource": {
+          "resourceType": "ValueSet",
+          "status": "draft",
+          "name": "BeDoseUnitsNoSpoonVS",
+          "id": "BeDoseUnitsNoSpoonVS",
+          "title": "Dose units - enumerated, no spoons",
+          "description": "A closed list of dose units. Any code not listed, including `{spoon}`, `{lepel}` and `mL{spoon}`, is outside the value set.",
+          "url": "https://www.ehealth.fgov.be/standards/fhir/ucum-test/ValueSet/BeDoseUnitsNoSpoonVS",
+          "experimental": true,
+          "compose": {
+            "include": [
+              {
+                "system": "http://unitsofmeasure.org",
+                "concept": [
+                  {
+                    "code": "mg",
+                    "display": "milligram"
+                  },
+                  {
+                    "code": "g",
+                    "display": "gram"
+                  },
+                  {
+                    "code": "mL",
+                    "display": "milliliter"
+                  },
+                  {
+                    "code": "{tablet}",
+                    "display": "tablet"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "coding",
+        "valueCoding": {
+          "system": "http://unitsofmeasure.org",
+          "code": "{lepel}",
+          "display": "lepel"
+        }
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  const p = (res.body.parameter || []);
+  const result = p.find(x => x.name === 'result');
+  const message = p.find(x => x.name === 'message');
+  test("result is false", function() {
+    expect(result && result.valueBoolean, message && message.valueString).to.equal(false);
+  });
+}
+
+docs {
+  MedicationRequest/dose-lepel doses 1 `{lepel}`. Profile `BeDoseNoSpoon` binds the dose to `BeDoseUnitsNoSpoonVS`.
+}

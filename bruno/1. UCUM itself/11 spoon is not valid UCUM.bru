@@ -1,0 +1,49 @@
+meta {
+  name: spoon is not valid UCUM
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{txBase}}/CodeSystem/$validate-code
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/fhir+json
+  Accept: application/fhir+json
+}
+
+body:json {
+  {
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "url",
+        "valueUri": "http://unitsofmeasure.org"
+      },
+      {
+        "name": "code",
+        "valueCode": "spoon"
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  const p = (res.body.parameter || []);
+  const result = p.find(x => x.name === 'result');
+  const message = p.find(x => x.name === 'message');
+  test("result is false", function() {
+    expect(result && result.valueBoolean, message && message.valueString).to.equal(false);
+  });
+}
+
+docs {
+  Without braces this is not UCUM at all (no such unit atom).
+}

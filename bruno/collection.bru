@@ -1,0 +1,21 @@
+headers {
+  Accept: application/fhir+json
+}
+
+docs {
+  # UCUM annotation test
+
+  Can we allow, or prevent, units like `{spoon}` or `{lepel}`?
+
+  - **1. UCUM itself** - CodeSystem/$validate-code. Any `{annotation}` is valid UCUM.
+  - **2-6. One folder per ValueSet** of the IG, sent inline to ValueSet/$validate-code.
+  - **7. Resources** - the dose quantity of each IG example against the value set
+    each profile binds it to.
+
+  Every request asserts the expected `result`. The requests and expectations come from
+  `generate.mjs` - edit them there, then run
+  `sushi build .` and `node bruno/generate.mjs`.
+
+  Environments: `sslip` (FHIRsmith at https://178.104.103.200.sslip.io/tx/r4),
+  `tx-fhir-org`, `tx-hl7europe`, `local` (set `txBase`).
+}

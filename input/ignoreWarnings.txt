@@ -1,0 +1,4 @@
+== Suppressed Messages ==
+
+# Test guide: no OIDs
+%The resource ValueSet/% should have an OID assigned%

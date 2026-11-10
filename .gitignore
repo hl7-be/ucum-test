@@ -1,0 +1,10 @@
+fsh-generated/
+input-cache/
+output/
+temp/
+template/
+node_modules/
+tests/output/
+notes/
+.github/
+Requirements-fromNarrative.json

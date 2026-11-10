@@ -1,0 +1,63 @@
+id: hl7.fhir.be.ucum-test
+canonical: https://www.ehealth.fgov.be/standards/fhir/ucum-test
+name: BeUcumTest
+title: "UCUM units - how validation works"
+description: >-
+  How UCUM units are validated in FHIR, with test cases: what the UCUM code system accepts on its own,
+  what a ValueSet drawn from UCUM can allow or prevent, and what the validator reports for each binding strength.
+status: draft
+license: CC0-1.0
+version: 0.1.0
+fhirVersion: 4.0.1
+copyrightYear: 2026+
+releaseLabel: ci-build
+
+publisher:
+  name: eHealth Platform
+  url: https://www.ehealth.fgov.be/standards/fhir
+  email: support@be-ehealth-standards.atlassian.net
+contact:
+  - name: Message Structure eHealth
+    telecom:
+      - system: email
+        value: support@be-ehealth-standards.atlassian.net
+        use: work
+jurisdiction: urn:iso:std:iso:3166#BE "Belgium"
+
+pages:
+  index.md:
+    title: Home
+  ucum.md:
+    title: How UCUM works
+  testing.md:
+    title: Running the tests
+
+menu:
+  Home: index.html
+  How UCUM works: ucum.html
+  Running the tests: testing.html
+  Artifacts: artifacts.html
+
+groups:
+  ValueSets:
+    name: Value sets
+    description: One value set per way of restricting UCUM units.
+    resources:
+    - ValueSet/BeUcumAllVS
+    - ValueSet/BeDoseUnitsNoSpoonVS
+    - ValueSet/BeDoseUnitsWithSpoonVS
+    - ValueSet/BeUcumWithoutSpoonVS
+    - ValueSet/BeVolumeUnitsVS
+  Profiles:
+    name: Test profiles
+    description: MedicationRequest profiles that differ only in the binding on the dose quantity.
+    resources:
+    - StructureDefinition/BeDoseNoSpoon
+    - StructureDefinition/BeDoseNoSpoonExtensible
+    - StructureDefinition/BeDoseNoSpoonPreferred
+    - StructureDefinition/BeDoseNoSpoonExample
+    - StructureDefinition/BeDoseWithSpoon
+    - StructureDefinition/BeDoseUcumUnits
+
+parameters:
+  show-inherited-invariants: false
